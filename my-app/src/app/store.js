@@ -3,14 +3,13 @@
 // importing configureStore to create the store using it
 import { configureStore } from "@reduxjs/toolkit";
 
-// importing the counter reducer from the counter slice
-import counterReducer from "../features/counter/counterSlice";
+// importing the reducer of the postSlice
+import postsReducer from "../features/posts/postsSlice";
 
 // saving the sotre in const store and exporting it
 export const store = configureStore({
   // reducers are functions that handle actions and update states
   reducer: {
-    // the first reducer is the counter reducer
-    counter: counterReducer,
+    posts: postsReducer,
   },
 });

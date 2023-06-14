@@ -1,11 +1,14 @@
 // importing components used in our app
-import Counter from "./features/counter/Counter";
+import PostsList from "./features/posts/PostsList";
+// import the add post form component
+import AddPostForm from "./features/posts/AddPostForm";
 
 function App() {
   return (
-    <div className=" ">
-      <Counter />
-    </div>
+    <main className="App">
+      <AddPostForm />
+      <PostsList />
+    </main>
   );
 }
 
