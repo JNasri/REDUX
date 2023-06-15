@@ -5,11 +5,14 @@ import { configureStore } from "@reduxjs/toolkit";
 
 // importing the reducer of the postSlice
 import postsReducer from "../features/posts/postsSlice";
+// importing the reducer of the userSlice
+import usersReducer from "../features/users/usersSlice";
 
 // saving the sotre in const store and exporting it
 export const store = configureStore({
   // reducers are functions that handle actions and update states
   reducer: {
     posts: postsReducer,
+    users: usersReducer,
   },
 });
