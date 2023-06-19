@@ -3,10 +3,10 @@
 
 // importing useState
 import { useState } from "react";
-// import useDispach to dispatch new data to the state
+// import useDispatch to dispatch new data to the state
 import { useDispatch, useSelector } from "react-redux";
 // get the postAdded reducer to use it here
-import { postAdded } from "./postsSlice";
+import { addNewPost } from "./postsSlice";
 // import the const that gets all users from the userSlice
 import { selectAllUsers } from "../users/usersSlice";
 
@@ -15,6 +15,8 @@ const AddPostForm = () => {
   const [title, setTitle] = useState("");
   const [content, setContent] = useState("");
   const [userId, setUserId] = useState("");
+  // create hook for the statue of adding a new post (idle is default)
+  const [addRequestStatus, setAddRequestStatus] = useState("idle");
   // tree functoins used down there in the form to listen for changes in the title
   // input or the content input or the author input
   const onTitleChange = (e) => setTitle(e.target.value);
@@ -27,25 +29,30 @@ const AddPostForm = () => {
   // get all users using the selector
   const users = useSelector(selectAllUsers);
 
+  // a boolean to make the submit button disabled when one or more fields are missing
+  const canSubmit =
+    [title, content, userId].every(Boolean) && addRequestStatus === "idle";
+
   // a function to save the data entered in the form
   const onSavePostClicked = () => {
-    // if both are not empty
-    if (title && content) {
-      // dispatch (send/link) the data submitted to the state
-      dispatch(
-        // using the reducer created in the slice to send title and content
-        postAdded(title, content, userId)
-      );
+    // if canSubmit is true (all is good and we can add a new post)
+    if (canSubmit) {
+      try {
+        // set it to pending (to prevent adding while the add function is running)
+        setAddRequestStatus("pending");
+        // add a new post and dispatch it
+        dispatch(addNewPost({ title, body: content, userId })).unwrap();
 
-      // after dispatching, clear the inputs
-      setTitle("");
-      setContent("");
-      setUserId("");
+        setTitle("");
+        setContent("");
+        setUserId("");
+      } catch (err) {
+        console.error("Failed to save the post", err);
+      } finally {
+        setAddRequestStatus("idle");
+      }
     }
   };
-
-  // a boolean to make the submit button disabled when one or more fields are missing
-  const canSubmit = Boolean(title) && Boolean(content) && Boolean(userId);
 
   // a function to to map through the users and when the author choose one of
   // the options, we will grab the id using the onAuthorChange. it is used down there
